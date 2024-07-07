@@ -1,11 +1,11 @@
 {
-    "title": "Título do Artigo",
-    "author": "Nome do Autor",
+    "title": "Introdução ao API Builder",
+    "author": "Marcel Tanuri",
     "date": "2024-07-06",
-    "categories": ["Categoria1", "Categoria2"],
-    "tags": ["tag1", "tag2", "tag3"],
-    "summary": "Resumo breve do artigo.",
-    "url": "titulo-do-artigo",
+    "categories": ["Liferay", "API"],
+    "tags": ["lowcode", "api", "headless"],
+    "summary": "Demonstrando o API Builder.",
+    "url": "intro-api-builder",
     "reading_time": "5 min",
     "featured_image": "https://www.seusite.com/imagens/titulo-do-artigo.jpg"
 }

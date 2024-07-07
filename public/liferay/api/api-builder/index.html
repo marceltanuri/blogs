@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Introdução ao API Builder</title>
+  <meta name="description" content="Demonstrando o API Builder.">
+  <meta name="author" content="Marcel Tanuri">
+  <meta name="keywords" content="lowcode, api, headless">
+  <link rel="canonical" href="intro-api-builder">
+</head>
+
+<body>
+  <nav>
+    <ul>
+      <li>Liferay</li>
+      <li>API</li>
+    </ul>
+  </nav>
+  <article>
+    <p><a href="https://learn.liferay.com/w/dxp/headless-delivery/api-builder">API builder</a> é atualmente uma beta feature pela qual administradores podem customizar APIs de Objects, tanto System Objects quanto novos Objects.</p>
+    <p>O escopo do que pode ser customizado, neste momento, ainda é pequeno. </p>
+    <h3>Atualmente o API Builder permite customizar em um endpoint, dentro deste escopo:</h3>
+    <ul>
+      <li>Omitir campos do response body original</li>
+      <li>Alterar o nome de campos do response body original</li>
+      <li>Aplicar filtros no endpoint original</li>
+      <li>Aplicar ordenação no endpoint original</li>
+      <li>Expor o novo endpoint customizado pelo método GET ou POST</li>
+    </ul>
+    <h3>Não está no escopo atual do API Builder</h3>
+    <ul>
+      <li>Transformar dados do endpoint original, ex: operações em texto, aritmética, lógica, etc</li>
+      <li>Fazer outras chamadas HTTP que não seja o endpoint original</li>
+    </ul>
+    <h3>Feature Flag</h3>
+    <p>Para começar, é necessário ativar a feature flag API Builder.</p>
+    <p><code>Control Panel &gt; Instance Settings &gt; Feature Flags &gt; Beta &gt; API Builder (LPS-178642)</code></p>
+    <p><img src="images/image-20240705-023701.png" alt="alt text"></p>
+    <p>Após salvar e atualizar a página, ficará disponível no menu a nova opção API Builder</p>
+    <p><img src="images/image-20240705-023851.png" alt="alt text"></p>
+    <h3>Criar um novo API</h3>
+    <p>O primeiro passo é criar uma API onde poderão ser disponibilizados diversos endpoints, podendo estes endpoints customizar diferentes Objects.</p>
+    <p><img src="images/image-20240705-024244.png" alt="alt text"></p>
+    <p><img src="images/image-20240705-024831.png" alt="alt text"></p>
+    <p>Neste caso a minha API será acessada pela URL /c/my-api. E os endpoints da minha API estão dentro dessa URL, como vamos ver a seguir. </p>
+    <p>Na URL da API não aceitas novas barras, nem pontos, ou nenhum outro caractere especial além do traço.</p>
+    <p>Não é possível atualmente criar uma URL para a API como por exemplo: /my-api/v1.0/</p>
+    <h3>Criar um novo schema dentro do novo API</h3>
+    <p>O próximo passo é criar um schema a ser usado por um ou mais endpoints da minha API</p>
+    <p><img src="images/image-20240705-025127.png" alt="alt text"></p>
+    <p>No meu caso vou criar um Schema baseado em um Object que criei e chamei de Article. Nesse object além dos campos default criei os campos AuthorName (text), Title (text), Stared (true or false)</p>
+    <p><img src="images/image-20240705-025402.png" alt="alt text"></p>
+    <p>Como descrito no nome do meu custom schema estou criando um response simplificado omitindo todos os campos default e mostrando apenas os campos Title e AuthorName que criei no meu Object Article.</p>
+    <p>Também estou mudando o nome AuthorName apenas para Author</p>
+    <p>Esse campo Author não é o campo Author default do response original, é o campo AuthorName com o nome mudado para Author</p>
+    <p><img src="images/image-20240705-025930.png" alt="alt text"></p>
+    <p>Criar um novo endpoint dentro do novo API
+      Finalmente podemos criar os endpoints que irão utilizar os schemas da API</p>
+    <p><img src="images/image-20240705-030318.png" alt="alt text"></p>
+    <p><img src="images/image-20240705-030336.png" alt="alt text"></p>
+    <p>Nesse caso criei dois endpoints customizados</p>
+    <p><em>/articles</em> irá listar todos os meus Articles mas com o response body simplificado omitindo a maioria dos campos</p>
+    <p><em>/stared-articles</em> usar o mesmo schema que omite campos e adicionalmente aplicará um filtro implícito para retornar apenas articles com o campo stared igual à true.</p>
+    <h3>Endpoint /articles</h3>
+    <p><img src="images/image-20240705-030652.png" alt="alt text"></p>
+    <p><img src="images/image-20240705-030702.png" alt="alt text"></p>
+    <h3>Endpoint /stared-articles</h3>
+    <p><img src="images/image-20240705-030738.png" alt="alt text"></p>
+    <p><img src="images/image-20240705-030750.png" alt="alt text"></p>
+    <h3>Testando a nova API</h3>
+    <p>A nova API já está disponível para uso e também está disponível a sua documentação OpenAPI na página Liferay API Explorer da sua instância Liferay. Por exemplo, se estiver usando o liferay em localhost:8080 pode encontrar a Liferay API Explorer ao acessar: <a href="http://localhost:8080/o/api">http://localhost:8080/o/api</a></p>
+    <p>No menu REST Applications, encontre a sua API criada pelo API Builder, no nosso caso a que tem a URL /c/my-api</p>
+    <p>O prefixo /c na URL da API customizada não é opcional e nem editável</p>
+    <p><img src="images/image-20240705-031450.png" alt="alt text"></p>
+    <h3>Testando o endpoint /articles</h3>
+    <p><img src="images/image-20240705-031644.png" alt="alt text"></p>
+    <p>Ao executar esse endpoint o retorno será todos os articles somente com os campos configurados no schema customizado. Por exemplo</p>
+    <pre><code>{
+  &quot;actions&quot;: {},
+  &quot;facets&quot;: [],
+  &quot;items&quot;: [
+    {
+      &quot;Author&quot;: &quot;M. Tanuri&quot;,
+      &quot;Title&quot;: &quot;Hello World&quot;
+    },
+    {
+      &quot;Author&quot;: &quot;M. Tanuri&quot;,
+      &quot;Title&quot;: &quot;Trying API Builder!&quot;
+    }
+  ],
+  &quot;lastPage&quot;: 1,
+  &quot;page&quot;: 1,
+  &quot;pageSize&quot;: 20,
+  &quot;totalCount&quot;: 2
+}
+</code></pre>
+    <h3>Testando o endpoint /stared-articles</h3>
+    <p><img src="images/image-20240705-031956.png" alt="alt text">
+      Ao executar esse endpoint o retorno será apenas os articles com o valor do campo stared igual à true e somente com os campos configurados no schema customizado serão apresentados. Por exemplo:</p>
+    <pre><code>{
+  &quot;actions&quot;: {},
+  &quot;facets&quot;: [],
+  &quot;items&quot;: [
+    {
+      &quot;Author&quot;: &quot;M. Tanuri&quot;,
+      &quot;Title&quot;: &quot;Trying API Builder!&quot;
+    }
+  ],
+  &quot;lastPage&quot;: 1,
+  &quot;page&quot;: 1,
+  &quot;pageSize&quot;: 20,
+  &quot;totalCount&quot;: 1
+}
+</code></pre>
+    <p>Neste momento nossa aplicação está pronta para ser utilizada, entretanto somente usuários autenticados no Liferay terão permissão de acessá-la. No próximo blog revelaremos mais detalhes dessa beta feature, e como configurar acesso público a seus endpoints.</p>
+
+  </article>
+</body>
+
+</html>
